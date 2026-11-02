@@ -1,15 +1,16 @@
-// Licensed under the Dartastic Pro Software License Agreement.
+// Licensed under the Apache License, Version 2.0
 // Copyright 2025-2026 Mindful Software LLC d/b/a Dartastic.io, All rights reserved.
 
-import 'package:dartastic_opentelemetry/dartastic_opentelemetry.dart';
+import 'package:dartastic_opentelemetry_api/dartastic_opentelemetry_api.dart';
 
 import 'otel_productboard_suppression.dart';
 
 const _tracerName = 'dartastic_otel_libs_productboard';
 
-Tracer _tracer() => OTel.tracerProvider().getTracer(_tracerName);
+APITracer _tracer() => OTelAPI.tracerProvider().getTracer(_tracerName);
 
 class ProductboardResult {
+  /// Creates a result.
   const ProductboardResult({
     this.workspaceId,
     this.entityKind,
@@ -81,8 +82,13 @@ class ProductboardResult {
   final int? statusCode;
 }
 
+/// What a traced call returned: the value for the caller plus fields
+/// recorded on the span.
 class ProductboardCallResult<T> {
+  /// Creates a call result.
   const ProductboardCallResult({required this.value, this.result});
+
+  /// The value returned to the caller.
   final T value;
   final ProductboardResult? result;
 }
@@ -111,116 +117,116 @@ Future<T> tracedProductboard<T>({
   final span = _tracer().startSpan(
     'productboard $operation',
     kind: SpanKind.client,
-    attributes: OTel.attributesFromMap(m),
+    attributes: OTelAPI.attributesFromMap(m),
   );
   try {
     final r = await invoke();
     if (r.result != null) {
       final extras = <Attribute<Object>>[];
       if (r.result!.workspaceId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.workspace.id',
           r.result!.workspaceId!,
         ));
       }
       if (r.result!.entityKind != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.entity.kind',
           r.result!.entityKind!,
         ));
       }
       if (r.result!.entityId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.entity.id',
           r.result!.entityId!,
         ));
       }
       if (r.result!.noteId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.note.id',
           r.result!.noteId!,
         ));
       }
       if (r.result!.noteSource != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.note.source',
           r.result!.noteSource!,
         ));
       }
       if (r.result!.companyId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.company.id',
           r.result!.companyId!,
         ));
       }
       if (r.result!.companyDomain != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.company.domain',
           r.result!.companyDomain!,
         ));
       }
       if (r.result!.userId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.user.id',
           r.result!.userId!,
         ));
       }
       if (r.result!.featureId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.feature.id',
           r.result!.featureId!,
         ));
       }
       if (r.result!.featureStatus != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.feature.status',
           r.result!.featureStatus!,
         ));
       }
       if (r.result!.featureTimeframe != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.feature.timeframe',
           r.result!.featureTimeframe!,
         ));
       }
       if (r.result!.productId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.product.id',
           r.result!.productId!,
         ));
       }
       if (r.result!.componentId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.component.id',
           r.result!.componentId!,
         ));
       }
       if (r.result!.releaseId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.release.id',
           r.result!.releaseId!,
         ));
       }
       if (r.result!.objectiveId != null) {
-        extras.add(OTel.attributeString(
+        extras.add(OTelAPI.attributeString(
           'productboard.objective.id',
           r.result!.objectiveId!,
         ));
       }
       if (r.result!.linkedNotesCount != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'productboard.linked_notes.count',
           r.result!.linkedNotesCount!,
         ));
       }
       if (r.result!.linkedInsightsCount != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'productboard.linked_insights.count',
           r.result!.linkedInsightsCount!,
         ));
       }
       if (r.result!.statusCode != null) {
-        extras.add(OTel.attributeInt(
+        extras.add(OTelAPI.attributeInt(
           'http.response.status_code',
           r.result!.statusCode!,
         ));
@@ -231,13 +237,13 @@ Future<T> tracedProductboard<T>({
           );
         }
       }
-      if (extras.isNotEmpty) span.addAttributes(OTel.attributes(extras));
+      if (extras.isNotEmpty) span.addAttributes(OTelAPI.attributes(extras));
     }
     return r.value;
   } catch (e, st) {
-    span.addAttributes(OTel.attributes([
-      OTel.attributeString(
-        ErrorResource.errorType.key,
+    span.addAttributes(OTelAPI.attributes([
+      OTelAPI.attributeString(
+        ErrorAttributes.errorType.key,
         e.runtimeType.toString(),
       ),
     ]));
