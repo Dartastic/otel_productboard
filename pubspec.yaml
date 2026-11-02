@@ -2,7 +2,7 @@ name: otel_productboard
 description: >-
   OpenTelemetry instrumentation for productboard by Dartastic.io. Adds
   standard OpenTelemetry observability to applications that use productboard.
-version: 0.1.0-wip
+version: 0.1.0
 repository: https://github.com/dartastic/otel_productboard
 homepage: https://dartastic.io
 
